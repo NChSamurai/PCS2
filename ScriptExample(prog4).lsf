@@ -1,0 +1,111 @@
+#!/bin/bash
+#
+#BSUB -J ArrayJob
+#BSUB -n 1
+#BSUB -oo output1.log
+#BSUB -eo error1.log
+
+if [ -z "$ROWS" ]; then
+    echo "Ошибка: переменная ROWS не задана!" >&2
+    echo "Используйте: ROWS=<размер> bsub < prog1.lsf" >&2
+    exit 1
+fi
+
+if [ -z "$COLS" ]; then
+    echo "Ошибка: переменная COLS не задана!" >&2
+    echo "Используйте: COLS=<размер> bsub < prog1.lsf" >&2
+    exit 1
+fi
+
+
+
+echo "Single" | tee -a ~/Desktop/Lab2/outputrun1.log
+GENERAL_TIME=0
+for i in {1..10}
+do
+        START_TIME=$(date +%s.%3N | tr -d '\n')
+        ./prog4 "$ROWS, $COLS"
+        END_TIME=$(date +%s.%3N | tr -d '\n')
+        DURATION=$(awk -v s="$START_TIME" -v e="$END_TIME" 'BEGIN {printf "%.3f", e - s}')
+        GENERAL_TIME=$(awk -v g="$GENERAL_TIME" -v d="$DURATION" 'BEGIN {printf "%.3f", g + d}')
+        echo " Running time: $DURATION seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+        sync
+done
+
+MIDDLE_TIME=$(awk -v g="$GENERAL_TIME" -v w="10.0" 'BEGIN {printf "%.3f", g/w}')
+echo "Middle time: $MIDDLE_TIME seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+echo "Array size: $ROWS" | tee -a ~/Desktop/Lab2/outputrun1.log
+
+
+export OMP_NUM_THREADS=2
+echo "Threads = 2" | tee -a ~/Desktop/Lab2/outputrun1.log
+GENERAL_TIME=0
+for i in {1..10}
+do
+        START_TIME=$(date +%s.%3N | tr -d '\n')
+        ./progOpenMp4 "$ROWS, $COLS"
+        END_TIME=$(date +%s.%3N | tr -d '\n')
+        DURATION=$(awk -v s="$START_TIME" -v e="$END_TIME" 'BEGIN {printf "%.3f", e - s}')
+        GENERAL_TIME=$(awk -v g="$GENERAL_TIME" -v d="$DURATION" 'BEGIN {printf "%.3f", g + d}')
+        echo " Running time: $DURATION seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+        sync
+done
+
+MIDDLE_TIME=$(awk -v g="$GENERAL_TIME" -v w="10.0" 'BEGIN {printf "%.3f", g/w}')
+echo "Middle time: $MIDDLE_TIME seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+echo "Array size: $ROWS" | tee -a ~/Desktop/Lab2/outputrun1.log
+
+export OMP_NUM_THREADS=4
+echo "Threads = 4" | tee -a ~/Desktop/Lab2/outputrun1.log
+GENERAL_TIME=0
+for i in {1..10}
+do
+        START_TIME=$(date +%s.%3N | tr -d '\n')
+        ./progOpenMp4 "$ROWS, $COLS"
+        END_TIME=$(date +%s.%3N | tr -d '\n')
+        DURATION=$(awk -v s="$START_TIME" -v e="$END_TIME" 'BEGIN {printf "%.3f", e - s}')
+        GENERAL_TIME=$(awk -v g="$GENERAL_TIME" -v d="$DURATION" 'BEGIN {printf "%.3f", g + d}')
+        echo " Running time: $DURATION seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+        sync
+done
+
+MIDDLE_TIME=$(awk -v g="$GENERAL_TIME" -v w="10.0" 'BEGIN {printf "%.3f", g/w}')
+echo "Middle time: $MIDDLE_TIME seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+echo "Array size: $ROWS" | tee -a ~/Desktop/Lab2/outputrun1.log
+
+export OMP_NUM_THREADS=8
+echo "Threads = 8" | tee -a ~/Desktop/Lab2/outputrun1.log
+GENERAL_TIME=0
+for i in {1..10}
+do
+        START_TIME=$(date +%s.%3N | tr -d '\n')
+        ./progOpenMp4 "$ROWS, $COLS"
+        END_TIME=$(date +%s.%3N | tr -d '\n')
+        DURATION=$(awk -v s="$START_TIME" -v e="$END_TIME" 'BEGIN {printf "%.3f", e - s}')
+        GENERAL_TIME=$(awk -v g="$GENERAL_TIME" -v d="$DURATION" 'BEGIN {printf "%.3f", g + d}')
+        echo " Running time: $DURATION seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+        sync
+done
+
+MIDDLE_TIME=$(awk -v g="$GENERAL_TIME" -v w="10.0" 'BEGIN {printf "%.3f", g/w}')
+echo "Middle time: $MIDDLE_TIME seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+echo "Array size: $ROWS" | tee -a ~/Desktop/Lab2/outputrun1.log
+
+export OMP_NUM_THREADS=16
+echo "Threads = 16" | tee -a ~/Desktop/Lab2/outputrun1.log
+GENERAL_TIME=0
+for i in {1..10}
+do
+        START_TIME=$(date +%s.%3N | tr -d '\n')
+        ./progOpenMp4 "$ROWS, $COLS"
+        END_TIME=$(date +%s.%3N | tr -d '\n')
+        DURATION=$(awk -v s="$START_TIME" -v e="$END_TIME" 'BEGIN {printf "%.3f", e - s}')
+        GENERAL_TIME=$(awk -v g="$GENERAL_TIME" -v d="$DURATION" 'BEGIN {printf "%.3f", g + d}')
+        echo " Running time: $DURATION seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+        sync
+done
+
+MIDDLE_TIME=$(awk -v g="$GENERAL_TIME" -v w="10.0" 'BEGIN {printf "%.3f", g/w}')
+echo "Middle time: $MIDDLE_TIME seconds" | tee -a ~/Desktop/Lab2/outputrun1.log
+echo "Array size: $ROWS" | tee -a ~/Desktop/Lab2/outputrun1.log
+
