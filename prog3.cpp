@@ -4,7 +4,43 @@
 #include <limits>
 #include <cstdlib>
 #include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <iomanip>
 
+
+double getTime(){
+    auto now = std::chrono::high_resolution_clock::now();
+
+    // Преобразуем в количество секунд с дробной частью
+    auto duration = now.time_since_epoch();
+    double seconds = std::chrono::duration<double>(duration).count();
+
+    // Округляем до 5 знаков после запятой
+    seconds = std::round(seconds * 1e5) / 1e5;
+
+    return seconds;
+}
+
+void appendTimeToBinaryFile(double timeValue) {
+    // Открываем файл в режиме добавления бинарных данных
+    std::ofstream outfile("GeneralTime.bin", std::ios::binary | std::ios::app);
+
+    if (!outfile) {
+        std::cerr << "Ошибка открытия файла GeneralTime.bin" << std::endl;
+        return;
+    }
+
+    // Записываем значение double в файл
+    outfile.write(reinterpret_cast<const char*>(&timeValue), sizeof(double));
+
+    // Проверяем успешность записи
+    if (!outfile.good()) {
+        std::cerr << "Ошибка записи в файл" << std::endl;
+    }
+
+    outfile.close();
+}
 // Функция для загрузки массива из файла
 void loadArrayFromFile(const std::string& filename, double* arr, size_t size) {
     std::ifstream file(filename);
@@ -66,13 +102,12 @@ int main(int argc, char* argv[]) {
         delete[] resultDiv;
         return 1;
     }
-
+double startTime = getTime();
 #pragma omp parallel for
     for (size_t i = 0; i < SIZE; ++i) {
         resultAdd[i] = array1[i] + array2[i];
         resultSub[i] = array1[i] - array2[i];
         resultMul[i] = array1[i] * array2[i];
-
         // Проверка на деление на ноль
         if (array2[i] != 0) {
             resultDiv[i] = array1[i] / array2[i];
@@ -80,7 +115,11 @@ int main(int argc, char* argv[]) {
             resultDiv[i] = std::numeric_limits<double>::quiet_NaN();
         }
     }
+    double endTime = getTime();
 
+    std::cout << endTime - startTime << "\n";
+
+    appendTimeToBinaryFile(double (endTime - startTime));
     // Освобождение памяти
     delete[] array1;
     delete[] array2;
