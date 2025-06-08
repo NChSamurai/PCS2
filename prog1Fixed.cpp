@@ -56,7 +56,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    double startTime = getTime();
     // Создаем динамический массив нужного размера
     int* array = new int[SIZE];
     int index = 0;
@@ -66,7 +65,7 @@ int main(int argc, char* argv[]) {
     }
 
     file.close();
-
+    double startTime = getTime();
     int summ = 0;
     for(int i = 0; i < index; i++) {
         summ = summ + array[i];
