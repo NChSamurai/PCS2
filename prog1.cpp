@@ -67,6 +67,7 @@ int main(int argc, char* argv[]) {
 
     file.close();
 double startTime = getTime();
+int summ = 0;
 #pragma omp parallel
         {
                 int localSumm = 0;
